@@ -6,7 +6,7 @@ pipeline {
         stage('Clone Repo') {
             steps {
                 git branch: 'master',
-                    url: 'https://github.com/toolsknowledge/genai-resume-analyzer.git'
+                    url: 'https://github.com/fullstacktraning/genai-resume-analyzer.git'
             }
         }
 

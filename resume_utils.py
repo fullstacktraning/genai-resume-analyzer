@@ -4,5 +4,7 @@ def extract_text(file):
     reader = PdfReader(file.file)
     text = ""
     for page in reader.pages:
-        text += page.extract_text()
-        return text
+        page_text = page.extract_text()
+        if page_text:
+            text += page_text
+    return text

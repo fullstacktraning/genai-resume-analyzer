@@ -3,10 +3,10 @@ pipeline {
 
     stages {
 
-        stage('Clone Repository') {
+        stage('Checkout Source Code') {
             steps {
                 git branch: 'master',
-                url: 'https://github.com/fullstacktraning/genai-resume-analyzer.git'
+                    url: 'https://github.com/fullstacktraning/genai-resume-analyzer.git'
             }
         }
 
@@ -24,14 +24,26 @@ pipeline {
 
         stage('Run New Container') {
             steps {
-                sh '''
-                docker run -d \
-                --name genai-container \
-                --env-file .env \
-                -p 8000:8000 \
-                genai-app:latest
-                '''
+                withCredentials([string(credentialsId: 'OPENAI_API_KEY', variable: 'OPENAI_API_KEY')]) {
+                    sh '''
+                    docker run -d \
+                    --name genai-container \
+                    -e OPENAI_API_KEY=$OPENAI_API_KEY \
+                    -e APP_ENV=production \
+                    -p 8000:8000 \
+                    genai-app:latest
+                    '''
+                }
             }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Deployment Successful – FastAPI is live on port 8000"
+        }
+        failure {
+            echo "❌ Deployment Failed – Check Jenkins logs"
         }
     }
 }

@@ -3,16 +3,16 @@ pipeline {
 
     stages {
 
-        stage('Clone Repo') {
+        stage('Clone Repository') {
             steps {
                 git branch: 'master',
-                    url: 'https://github.com/fullstacktraning/genai-resume-analyzer.git'
+                url: 'https://github.com/fullstacktraning/genai-resume-analyzer.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t genai-app .'
+                sh 'docker build -t genai-app:latest .'
             }
         }
 
@@ -22,14 +22,14 @@ pipeline {
             }
         }
 
-        stage('Run Container') {
+        stage('Run New Container') {
             steps {
                 sh '''
                 docker run -d \
                 --name genai-container \
                 --env-file .env \
                 -p 8000:8000 \
-                genai-app
+                genai-app:latest
                 '''
             }
         }
